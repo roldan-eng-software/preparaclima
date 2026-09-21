@@ -19,10 +19,12 @@ src/app/            # Expo Router (cada arquivo = rota)
 src/components/     # themed-*, parallax, hello-wave, haptic-tab, external-link, ui/
 src/constants/theme.ts  # Colors light/dark + CoresAlerta + Fonts
 src/hooks/          # use-color-scheme(.web), use-theme-color
-src/store/          # index (store + persistência) + profileSlice
-src/types/profile.ts    # RiscoClimatico, Mobilidade, PerfilRisco, opções PT-BR
+src/store/          # index (store + persistência) + profileSlice + painelSlice
+src/services/       # clima.ts (OpenWeather + fallback demonstração), alertas.ts
+src/types/          # profile, clima, alerta (+ ORDEM_NIVEL, nivelMaisGrave)
+src/utils/          # format.ts (formatarDataHora pt-BR)
 src/assets/images/  # ícone, splash, favicon, logos do template
-src/lib/ src/services/ src/utils/  # vazias (reservadas)
+src/lib/            # vazio (reservado)
 ```
 
 Alias `@/* → ./src/*` (`tsconfig.json`). Router usa `src/app` como raiz

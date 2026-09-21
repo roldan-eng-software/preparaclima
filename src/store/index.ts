@@ -6,12 +6,13 @@ import {
   type TypedUseSelectorHook,
 } from "react-redux";
 import profileReducer from "./profileSlice";
+import painelReducer from "./painelSlice";
 
 const CHAVE_PERFIL = "@preparaclima:perfil";
 const CHAVE_PERFIL_LEGADA = "@climasafe:perfil";
 
 export const store = configureStore({
-  reducer: { profile: profileReducer },
+  reducer: { profile: profileReducer, painel: painelReducer },
 });
 
 function perfilValido(valor: unknown): boolean {

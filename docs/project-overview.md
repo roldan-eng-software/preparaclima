@@ -14,18 +14,21 @@ Especificação completa: [ClimaSafe_PRD.md](ClimaSafe_PRD.md).
   e mobilidade (crianças, idosos, PCD). Guard em `src/app/_layout.tsx`
   redireciona para `/onboarding/quiz` até concluir; perfil persiste em
   AsyncStorage (`@preparaclima:perfil`).
-- **Dashboard mock** (`src/app/(tabs)/index.tsx`): card de alerta
-  (cores em `CoresAlerta`), bloco "Agora" com dados de demonstração e
-  resumo do perfil. Botão "Ativar Plano de Emergência" é placeholder.
+- **Dashboard real** (`src/app/(tabs)/index.tsx` + `src/store/painelSlice.ts`):
+  card principal com o alerta mais grave (verde/amarelo/laranja/vermelho,
+  lista dos demais vigentes), bloco "Agora" com temperatura, chuva e vento
+  reais (OpenWeather, com chave em `EXPO_PUBLIC_OPENWEATHER_API_KEY`) e
+  resumo do perfil. Sem chave, exibe demonstração sinalizada; sem rede,
+  mostra o último cache com selo de desatualizado; fonte de alertas
+  indisponível nunca finge verde.
 - **Servidor esqueleto** (`server/`): Fastify com `GET /saude` e
   `GET /alertas` (vazio). Sem banco, auth ou integrações.
 
-## O que falta (PRD 1.2–1.7)
+## O que falta (Specs 05–09 do PRD MVP)
 
-Integração OpenWeather/INMET, checklist de preparação interativo
-(Antes/Durante/Depois), mapa de recursos locais, feed comunitário,
-notificações push (`expo-notifications` instalado, não configurado),
-contatos de emergência, PDF offline e LGPD.
+Checklist de preparação interativo (Antes/Durante/Depois) com progresso,
+contatos de emergência, notificações essenciais, tela de privacidade com
+apagar dados, e INMET como fonte de alertas (hoje via OpenWeather).
 
 ## Stack real
 
