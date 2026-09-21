@@ -8,6 +8,8 @@ import {
 import profileReducer from "./profileSlice";
 import painelReducer from "./painelSlice";
 import progressoReducer, { persistirProgresso } from "./progressoSlice";
+import contatosReducer, { persistirContatos } from "./contatosSlice";
+import avisosReducer, { persistirAvisos } from "./avisosSlice";
 
 const CHAVE_PERFIL = "@preparaclima:perfil";
 const CHAVE_PERFIL_LEGADA = "@climasafe:perfil";
@@ -17,6 +19,8 @@ export const store = configureStore({
     profile: profileReducer,
     painel: painelReducer,
     progresso: progressoReducer,
+    contatos: contatosReducer,
+    avisos: avisosReducer,
   },
 });
 
@@ -59,6 +63,8 @@ store.subscribe(() => {
       () => {}
     );
     persistirProgresso(() => estado.progresso);
+    persistirContatos(() => estado.contatos);
+    persistirAvisos(() => estado.avisos);
   }, 300);
 });
 

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { obterAlertasVigentes } from "@/services/alertas";
+import { avaliarENotificar } from "@/services/avisos";
 import { obterClimaAtual } from "@/services/clima";
 import type { AlertaOficial } from "@/types/alerta";
 import type { LeituraClima } from "@/types/clima";
@@ -51,6 +52,9 @@ export const atualizarPainel = createAsyncThunk(
       salvaEm: new Date().toISOString(),
     };
     await AsyncStorage.setItem(CHAVE_PAINEIL, JSON.stringify(pacote));
+    if (alertas.ok && alertas.alertas.length > 0) {
+      avaliarENotificar(alertas.alertas).catch(() => {});
+    }
     return { clima, alertas, pacote };
   }
 );

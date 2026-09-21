@@ -26,13 +26,24 @@ Especificação completa: [ClimaSafe_PRD.md](ClimaSafe_PRD.md).
     em 3 fases (Antes, Durante, Depois) com PT-BR simples, troca de plano para
     múltiplos riscos, marcar/desmarcar com percentual e barra, recomeçar com
     confirmação, progresso persistido em `@preparaclima:progresso`.
+- **Contatos de emergência** (`src/app/(tabs)/contatos.tsx` +
+  `src/store/contatosSlice.ts`): pessoais (máx. 10, validados, CRUD com
+  confirmação de exclusão) + públicos nacionais (193/192/190/199, toque
+  para ligar), WhatsApp/SMS com texto de localização e compartilhar
+  localização; persistidos em `@preparaclima:contatos`.
+- **Notificações essenciais** (`src/app/(tabs)/avisos.tsx` +
+  `src/services/avisos.ts` + `src/store/avisosSlice.ts`): permissão,
+  tipos de interesse, silencioso 22h–8h configurável (vermelho fura),
+  teto 1/dia por nível, resumo diário opcional, toque abre o painel,
+  checagem em background (`expo-background-task`, mín. 60 min) e ao
+  atualizar o painel; prefs em `@preparaclima:avisos`.
 - **Servidor esqueleto** (`server/`): Fastify com `GET /saude` e
   `GET /alertas` (vazio). Sem banco, auth ou integrações (fora do recorte).
 
-## O que falta (Specs 07–09 do PRD MVP)
+## O que falta (Spec 09 do PRD MVP)
 
-Contatos de emergência, notificações essenciais, tela de privacidade com
-apagar dados, e INMET como fonte de alertas (hoje via OpenWeather).
+Tela de privacidade com apagar dados, selos de desatualizado offline e QA
+final PT-BR claro/escuro; INMET como fonte de alertas (hoje via OpenWeather).
 
 ## Stack real
 

@@ -4,6 +4,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { Stack, useRouter, useSegments } from "expo-router";
+import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
@@ -13,6 +14,9 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { carregarPerfilPersistido, store, useAppSelector } from "@/store";
 import { hidratarPerfil } from "@/store/profileSlice";
 import { carregarProgresso, hidratarProgresso } from "@/store/progressoSlice";
+import { carregarContatos, hidratarContatos } from "@/store/contatosSlice";
+import { carregarAvisos, hidratarAvisos } from "@/store/avisosSlice";
+import { registrarTarefaAvisos } from "@/services/avisos";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -35,6 +39,26 @@ function GuardRotas({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function useObservadorAvisos() {
+  const router = useRouter();
+  useEffect(() => {
+    try {
+      const ultima = Notifications.getLastNotificationResponse();
+      const url = ultima?.notification.request.content.data?.url;
+      if (typeof url === "string") router.replace(url as "/(tabs)");
+    } catch {
+      // Notifications indisponível (web): segue o fluxo normal.
+    }
+    const inscricao = Notifications.addNotificationResponseReceivedListener(
+      (resposta) => {
+        const url = resposta.notification.request.content.data?.url;
+        if (typeof url === "string") router.replace(url as "/(tabs)");
+      }
+    );
+    return () => inscricao.remove();
+  }, [router]);
+}
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [hidratado, setHidratado] = useState(false);
@@ -46,7 +70,14 @@ export default function RootLayout() {
       }
       carregarProgresso().then((progresso) => {
         if (progresso) store.dispatch(hidratarProgresso(progresso));
-        setHidratado(true);
+        carregarContatos().then((contatos) => {
+          if (contatos) store.dispatch(hidratarContatos(contatos));
+          carregarAvisos().then((avisos) => {
+            if (avisos) store.dispatch(hidratarAvisos(avisos));
+            registrarTarefaAvisos().catch(() => {});
+            setHidratado(true);
+          });
+        });
       });
     });
   }, []);
@@ -55,15 +86,26 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <GuardRotas>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-          </Stack>
-        </GuardRotas>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <AppInterno colorScheme={colorScheme} />
     </Provider>
+  );
+}
+
+function AppInterno({
+  colorScheme,
+}: {
+  colorScheme: "light" | "dark" | null | undefined;
+}) {
+  useObservadorAvisos();
+  return (
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <GuardRotas>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        </Stack>
+      </GuardRotas>
+      <StatusBar style="auto" />
+    </ThemeProvider>
   );
 }

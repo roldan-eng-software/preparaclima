@@ -23,6 +23,7 @@ const MAPPING = {
   "chevron.right": "chevron-right",
   "list.bullet.clipboard.fill": "checklist",
   "phone.fill": "phone",
+  "bell.fill": "notifications",
 } as IconMapping;
 
 /**

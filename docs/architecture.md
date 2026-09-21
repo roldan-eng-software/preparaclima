@@ -13,17 +13,17 @@ Sem backend real, banco, auth ou testes. Produto e roadmap:
 
 ```
 src/app/            # Expo Router (cada arquivo = rota)
-  _layout.tsx       # Provider Redux + ThemeProvider + GuardRotas
-  (tabs)/           # index (Início), plano, contatos, _layout
+  _layout.tsx       # Provider Redux + ThemeProvider + GuardRotas + avisos
+  (tabs)/           # index (Início), plano, contatos, avisos, _layout
   onboarding/       # quiz, localizacao, domicilio, revisao, _layout
 src/components/     # themed-*, parallax, hello-wave, haptic-tab, external-link, ui/
 src/constants/theme.ts  # Colors light/dark + CoresAlerta + Fonts
 src/hooks/          # use-color-scheme(.web), use-theme-color
 src/store/          # index + profileSlice + painelSlice + progressoSlice
-src/services/       # clima.ts (OpenWeather + fallback demonstração), alertas.ts
+  # + contatosSlice (@preparaclima:contatos) + avisosSlice (@preparaclima:avisos)
+src/services/       # clima.ts, alertas.ts, avisos.ts (background + regras)
+src/types/          # profile, clima, alerta, contato, avisos
 src/lib/            # planos.ts (catálogo 6 riscos × 3 fases PT-BR)
-src/types/          # profile, clima, alerta (+ ORDEM_NIVEL, nivelMaisGrave)
-src/utils/          # format.ts (formatarDataHora pt-BR)
 src/assets/images/  # ícone, splash, favicon, logos do template
 src/lib/            # vazio (reservado)
 ```
