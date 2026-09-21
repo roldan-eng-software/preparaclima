@@ -1,5 +1,7 @@
 import type { NivelAlerta } from "@/constants/theme";
 
+export type FonteAlerta = "inmet" | "defesa-civil" | "openweather";
+
 export interface AlertaOficial {
   id: string;
   nivel: NivelAlerta;
@@ -8,6 +10,7 @@ export interface AlertaOficial {
   recomendacao: string;
   validade: string | null;
   orgao: string;
+  fonte: FonteAlerta;
 }
 
 export type ErroAlertas = "sem-chave" | "sem-rede" | "servico-indisponivel";

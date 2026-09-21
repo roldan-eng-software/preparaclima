@@ -23,6 +23,8 @@ src/hooks/          # use-color-scheme(.web), use-theme-color, use-rede
 src/store/          # index + profileSlice + painelSlice + progressoSlice
   # + contatosSlice (@preparaclima:contatos) + avisosSlice (@preparaclima:avisos)
 src/services/       # clima.ts, alertas.ts, avisos.ts (background + regras)
+  # provedores.ts (INMET primário em homologação + OpenWeather fallback,
+  # deduplicação, mapearSeveridadeInmet)
 src/types/          # profile, clima, alerta, contato, avisos
 src/lib/            # planos.ts (catálogo 6 riscos × 3 fases PT-BR)
 src/assets/images/  # ícone, splash, favicon, logos do template

@@ -1,5 +1,6 @@
 import type { Localizacao } from "@/types/profile";
 import type { ResultadoAlertas } from "@/types/alerta";
+import { buscarAlertasMultiFonte, provedorAtivo } from "./provedores";
 
 export async function obterAlertasVigentes(
   localizacao: Localizacao | null
@@ -11,51 +12,21 @@ export async function obterAlertasVigentes(
       mensagem: "Informe sua localização no perfil.",
     };
   }
-  const chave = process.env.EXPO_PUBLIC_OPENWEATHER_API_KEY;
-  if (!chave) {
+  if (!provedorAtivo()) {
     return {
       ok: false,
       erro: "sem-chave",
       mensagem:
-        "Fonte de alertas ainda não configurada. Integração INMET prevista.",
+        "Fonte de alertas ainda não configurada. Configure a chave OpenWeather ou habilite o INMET.",
     };
   }
   try {
-    const consulta =
-      localizacao.modo === "gps"
-        ? `lat=${localizacao.latitude}&lon=${localizacao.longitude}`
-        : `q=${encodeURIComponent(`${localizacao.cidade},${localizacao.estado},BR`)}`;
-    const resposta = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?${consulta}&appid=${chave}&lang=pt_br`
-    );
-    if (!resposta.ok) {
-      return {
-        ok: false,
-        erro: "servico-indisponivel",
-        mensagem: "Alertas indisponíveis no momento. Tente de novo.",
-      };
+    const { alertas, erros } = await buscarAlertasMultiFonte(localizacao);
+    if (alertas.length > 0) return { ok: true, alertas };
+    if (erros.length > 0) {
+      return { ok: false, erro: "servico-indisponivel", mensagem: erros[0] };
     }
-    const dados = await resposta.json();
-    const brutos: unknown[] = Array.isArray(dados.alerts) ? dados.alerts : [];
-    return {
-      ok: true,
-      alertas: brutos.map((a, i) => {
-        const alerta = a as Record<string, unknown>;
-        return {
-          id: String(alerta.event ?? `alerta-${i}`),
-          nivel: "amarelo" as const,
-          titulo: String(alerta.event ?? "Alerta meteorológico"),
-          descricao: String(alerta.description ?? ""),
-          recomendacao:
-            "Acompanhe as atualizações e siga seu plano de preparação.",
-          validade:
-            typeof alerta.end === "number"
-              ? new Date(alerta.end * 1000).toISOString()
-              : null,
-          orgao: String(alerta.sender_name ?? "OpenWeather"),
-        };
-      }),
-    };
+    return { ok: true, alertas: [] };
   } catch {
     return {
       ok: false,
@@ -64,3 +35,5 @@ export async function obterAlertasVigentes(
     };
   }
 }
+
+export { provedorAtivo };

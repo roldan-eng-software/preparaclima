@@ -47,8 +47,9 @@ Especificação completa: [ClimaSafe_PRD.md](ClimaSafe_PRD.md).
 
 ## Trabalho futuro (fora do recorte MVP)
 
-INMET como fonte de alertas (hoje via OpenWeather); mapa, feed, grupos, IA,
-B2B, premium, AdMob, PDF, i18n/expansão — ver `ClimaSafe_PRD.md`.
+Confirmar endpoint JSON do INMET com rede real e implementar o buscar() do
+provedor (hoje em homologação); mapa, feed, grupos, IA, B2B, premium, AdMob,
+PDF, i18n/expansão — ver `ClimaSafe_PRD.md`.
 
 ## Stack real
 
