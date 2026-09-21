@@ -4,6 +4,7 @@ import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 
 import { CoresAlerta } from "@/constants/theme";
+import { AvisoOffline } from "@/components/aviso-offline";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
   atualizarPainel,
@@ -47,6 +48,7 @@ export default function Dashboard() {
         <RefreshControl refreshing={painel.atualizando} onRefresh={carregar} />
       }
     >
+      <AvisoOffline />
       <Card style={[estilos.alerta, { backgroundColor: cores.fundo }]}>
         <Card.Content>
           <Text variant="titleLarge" style={{ color: cores.texto }}>
@@ -167,6 +169,9 @@ export default function Dashboard() {
       <View style={estilos.acoes}>
         <Button mode="contained" onPress={() => router.push("/plano")}>
           Ativar Plano de Emergência
+        </Button>
+        <Button mode="text" onPress={() => router.push("/privacidade")}>
+          Privacidade e meus dados
         </Button>
       </View>
     </ScrollView>

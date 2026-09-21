@@ -1,14 +1,15 @@
 # PreparaClima — Alerta Climático + Preparação (Brasil-first MVP)
 
 App mobile (iOS/Android) em Expo que personaliza alertas climáticos pelo
-perfil de risco do usuário. Onboarding (quiz, localização, domicílio) e
-dashboard de alertas. Especificação: [docs/ClimaSafe_PRD.md](docs/ClimaSafe_PRD.md) ·
+perfil de risco do usuário: onboarding (quiz, localização, domicílio),
+painel com clima e alertas reais, checklist de preparação, contatos de
+emergência e avisos. Especificação: [docs/prd/climasafe-mvp.md](docs/prd/climasafe-mvp.md) ·
 Visão: [docs/project-overview.md](docs/project-overview.md) ·
 Arquitetura: [docs/architecture.md](docs/architecture.md).
 
-> Status: MVP parcial. Dashboard usa dados de demonstração; integrações
-> OpenWeather/INMET, checklist, mapa, feed, notificações e contatos ainda
-> não implementados.
+> Status: MVP implementado (Specs 01–09). Sem chave OpenWeather, o painel
+> exibe demonstração sinalizada; INMET como fonte de alertas é trabalho
+> futuro.
 
 ## Pré-requisitos
 
@@ -46,15 +47,18 @@ Pre-commit (Husky): Prettier nos arquivos staged + `typecheck`.
 ## Estrutura
 
 ```
-src/app/            # Rotas Expo Router: (tabs)/, onboarding/
-src/components/     # UI (themed-*, ui/*)
+src/app/            # Rotas: (tabs)/ (Início, Plano, Contatos, Avisos), onboarding/, privacidade
+src/components/     # UI (themed-*, ui/*, aviso-offline)
 src/constants/      # theme.ts (Colors, CoresAlerta verde→vermelho)
-src/hooks/          # use-color-scheme, use-theme-color
-src/store/          # Redux profile (riscos, localização, domicílio)
-src/types/          # PerfilRisco e opções PT-BR
+src/hooks/          # use-color-scheme, use-theme-color, use-rede
+src/store/          # profile, painel, progresso, contatos, avisos (persistidos)
+src/services/       # clima, alertas, avisos (regras + background)
+src/lib/            # planos.ts (catálogo 6 riscos × 3 fases)
+src/types/          # profile, clima, alerta, contato, avisos
+src/utils/          # format.ts (data/hora pt-BR)
 src/assets/images/  # ícone, splash, favicon
-server/             # API Fastify (esqueleto)
-docs/               # project-overview, architecture, ClimaSafe_PRD
+server/             # API Fastify (esqueleto, fora do recorte)
+docs/               # project-overview, architecture, prd/, ClimaSafe_PRD
 ```
 
 Fluxo: primeiro acesso cai em `/onboarding/quiz`; ao concluir, o perfil

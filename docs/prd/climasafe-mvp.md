@@ -1,7 +1,7 @@
 # PRD — PreparaClima MVP (Brasil-first)
 
 > Tipo: PRD inicial · Data: 2026-09-21
-> **Status:** Aguardando implementação
+> **Status:** Implementada
 >
 > <!-- Valores possíveis: "Aguardando implementação" | "Implementada". Atualize para "Implementada" quando todas as specs estiverem concluídas. -->
 

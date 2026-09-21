@@ -103,6 +103,7 @@ function AppInterno({
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="privacidade" options={{ title: "Privacidade" }} />
         </Stack>
       </GuardRotas>
       <StatusBar style="auto" />

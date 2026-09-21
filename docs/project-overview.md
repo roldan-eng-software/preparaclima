@@ -6,7 +6,7 @@ App mobile (iOS/Android, Expo) de alerta climático com foco em
 **preparação pessoal e comunitária**, estratégia **Brasil-first** (PT-BR).
 Especificação completa: [ClimaSafe_PRD.md](ClimaSafe_PRD.md).
 
-## O que existe hoje (MVP parcial)
+## O que existe hoje (MVP implementado)
 
 - **Onboarding de perfil de risco** (`src/app/onboarding/`): quiz de riscos
   (enchente, deslizamento, seca, vendaval, geada, múltiplos), localização
@@ -37,13 +37,18 @@ Especificação completa: [ClimaSafe_PRD.md](ClimaSafe_PRD.md).
   teto 1/dia por nível, resumo diário opcional, toque abre o painel,
   checagem em background (`expo-background-task`, mín. 60 min) e ao
   atualizar o painel; prefs em `@preparaclima:avisos`.
+- **Offline e privacidade** (`src/components/aviso-offline.tsx` +
+  `src/app/privacidade.tsx` + `src/hooks/use-rede.ts`): banner "sem conexão"
+  no painel, checklist/contatos/perfil sempre locais, tela de privacidade em
+  PT-BR simples com apagar-tudo em 2 passos (confirmação + digitar APAGAR)
+  que volta ao primeiro uso.
 - **Servidor esqueleto** (`server/`): Fastify com `GET /saude` e
   `GET /alertas` (vazio). Sem banco, auth ou integrações (fora do recorte).
 
-## O que falta (Spec 09 do PRD MVP)
+## Trabalho futuro (fora do recorte MVP)
 
-Tela de privacidade com apagar dados, selos de desatualizado offline e QA
-final PT-BR claro/escuro; INMET como fonte de alertas (hoje via OpenWeather).
+INMET como fonte de alertas (hoje via OpenWeather); mapa, feed, grupos, IA,
+B2B, premium, AdMob, PDF, i18n/expansão — ver `ClimaSafe_PRD.md`.
 
 ## Stack real
 

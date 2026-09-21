@@ -16,9 +16,10 @@ src/app/            # Expo Router (cada arquivo = rota)
   _layout.tsx       # Provider Redux + ThemeProvider + GuardRotas + avisos
   (tabs)/           # index (Início), plano, contatos, avisos, _layout
   onboarding/       # quiz, localizacao, domicilio, revisao, _layout
-src/components/     # themed-*, parallax, hello-wave, haptic-tab, external-link, ui/
+  privacidade.tsx   # tela LGPD mínima + apagar-tudo
+src/components/     # themed-*, aviso-offline, haptic-tab, external-link, ui/
 src/constants/theme.ts  # Colors light/dark + CoresAlerta + Fonts
-src/hooks/          # use-color-scheme(.web), use-theme-color
+src/hooks/          # use-color-scheme(.web), use-theme-color, use-rede
 src/store/          # index + profileSlice + painelSlice + progressoSlice
   # + contatosSlice (@preparaclima:contatos) + avisosSlice (@preparaclima:avisos)
 src/services/       # clima.ts, alertas.ts, avisos.ts (background + regras)
