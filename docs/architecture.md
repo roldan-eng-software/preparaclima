@@ -19,8 +19,9 @@ src/app/            # Expo Router (cada arquivo = rota)
 src/components/     # themed-*, parallax, hello-wave, haptic-tab, external-link, ui/
 src/constants/theme.ts  # Colors light/dark + CoresAlerta + Fonts
 src/hooks/          # use-color-scheme(.web), use-theme-color
-src/store/          # index (store + persistência) + profileSlice + painelSlice
+src/store/          # index + profileSlice + painelSlice + progressoSlice
 src/services/       # clima.ts (OpenWeather + fallback demonstração), alertas.ts
+src/lib/            # planos.ts (catálogo 6 riscos × 3 fases PT-BR)
 src/types/          # profile, clima, alerta (+ ORDEM_NIVEL, nivelMaisGrave)
 src/utils/          # format.ts (formatarDataHora pt-BR)
 src/assets/images/  # ícone, splash, favicon, logos do template

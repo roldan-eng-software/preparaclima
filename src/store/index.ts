@@ -7,12 +7,17 @@ import {
 } from "react-redux";
 import profileReducer from "./profileSlice";
 import painelReducer from "./painelSlice";
+import progressoReducer, { persistirProgresso } from "./progressoSlice";
 
 const CHAVE_PERFIL = "@preparaclima:perfil";
 const CHAVE_PERFIL_LEGADA = "@climasafe:perfil";
 
 export const store = configureStore({
-  reducer: { profile: profileReducer, painel: painelReducer },
+  reducer: {
+    profile: profileReducer,
+    painel: painelReducer,
+    progresso: progressoReducer,
+  },
 });
 
 function perfilValido(valor: unknown): boolean {
@@ -49,10 +54,11 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 store.subscribe(() => {
   if (timer) clearTimeout(timer);
   timer = setTimeout(() => {
-    AsyncStorage.setItem(
-      CHAVE_PERFIL,
-      JSON.stringify(store.getState().profile)
-    ).catch(() => {});
+    const estado = store.getState();
+    AsyncStorage.setItem(CHAVE_PERFIL, JSON.stringify(estado.profile)).catch(
+      () => {}
+    );
+    persistirProgresso(() => estado.progresso);
   }, 300);
 });
 

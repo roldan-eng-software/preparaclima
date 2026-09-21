@@ -21,13 +21,17 @@ Especificação completa: [ClimaSafe_PRD.md](ClimaSafe_PRD.md).
   resumo do perfil. Sem chave, exibe demonstração sinalizada; sem rede,
   mostra o último cache com selo de desatualizado; fonte de alertas
   indisponível nunca finge verde.
+- **Checklist de preparação** (`src/app/(tabs)/plano.tsx` + `src/lib/planos.ts`
+  - `src/store/progressoSlice.ts`): catálogo embutido (offline) dos 6 riscos
+    em 3 fases (Antes, Durante, Depois) com PT-BR simples, troca de plano para
+    múltiplos riscos, marcar/desmarcar com percentual e barra, recomeçar com
+    confirmação, progresso persistido em `@preparaclima:progresso`.
 - **Servidor esqueleto** (`server/`): Fastify com `GET /saude` e
-  `GET /alertas` (vazio). Sem banco, auth ou integrações.
+  `GET /alertas` (vazio). Sem banco, auth ou integrações (fora do recorte).
 
-## O que falta (Specs 05–09 do PRD MVP)
+## O que falta (Specs 07–09 do PRD MVP)
 
-Checklist de preparação interativo (Antes/Durante/Depois) com progresso,
-contatos de emergência, notificações essenciais, tela de privacidade com
+Contatos de emergência, notificações essenciais, tela de privacidade com
 apagar dados, e INMET como fonte de alertas (hoje via OpenWeather).
 
 ## Stack real

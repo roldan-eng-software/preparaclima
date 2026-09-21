@@ -12,6 +12,7 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { carregarPerfilPersistido, store, useAppSelector } from "@/store";
 import { hidratarPerfil } from "@/store/profileSlice";
+import { carregarProgresso, hidratarProgresso } from "@/store/progressoSlice";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -43,7 +44,10 @@ export default function RootLayout() {
       if (perfil?.onboardingConcluido) {
         store.dispatch(hidratarPerfil(perfil));
       }
-      setHidratado(true);
+      carregarProgresso().then((progresso) => {
+        if (progresso) store.dispatch(hidratarProgresso(progresso));
+        setHidratado(true);
+      });
     });
   }, []);
 
