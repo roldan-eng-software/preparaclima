@@ -147,11 +147,11 @@ export default function Plano() {
 }
 
 const estilos = StyleSheet.create({
-  container: { flexGrow: 1, padding: 24, gap: 12, justifyContent: "center" },
-  subtitulo: { opacity: 0.7 },
-  lista: { flexGrow: 1, padding: 16, gap: 16 },
+  container: { flexGrow: 1, padding: 24, gap: 16, justifyContent: "center" },
+  subtitulo: { opacity: 0.5 },
+  lista: { flexGrow: 1, padding: 24, gap: 16 },
   troca: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   item: { flexDirection: "row", gap: 8, alignItems: "flex-start" },
   riscado: { textDecorationLine: "line-through", opacity: 0.6 },
-  meta: { opacity: 0.7 },
+  meta: { opacity: 0.5 },
 });

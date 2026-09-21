@@ -224,8 +224,8 @@ export default function Contatos() {
 }
 
 const estilos = StyleSheet.create({
-  lista: { flexGrow: 1, padding: 16, gap: 12 },
-  meta: { opacity: 0.7 },
+  lista: { flexGrow: 1, padding: 34, gap: 20 },
+  meta: { opacity: 0.5 },
   erro: { color: "#DC2626" },
   acoesLinha: { flexDirection: "row", alignItems: "center", gap: 4 },
 });
