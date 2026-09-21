@@ -8,6 +8,11 @@ import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  Provider as PaperProvider,
+} from "react-native-paper";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -98,15 +103,22 @@ function AppInterno({
 }) {
   useObservadorAvisos();
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <GuardRotas>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-          <Stack.Screen name="privacidade" options={{ title: "Privacidade" }} />
-        </Stack>
-      </GuardRotas>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <PaperProvider
+      theme={colorScheme === "dark" ? MD3DarkTheme : MD3LightTheme}
+    >
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <GuardRotas>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="privacidade"
+              options={{ title: "Privacidade" }}
+            />
+          </Stack>
+        </GuardRotas>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </PaperProvider>
   );
 }

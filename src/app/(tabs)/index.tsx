@@ -179,9 +179,9 @@ export default function Dashboard() {
 }
 
 const estilos = StyleSheet.create({
-  container: { flexGrow: 1, padding: 16, gap: 12 },
+  container: { flexGrow: 1, padding: 34, gap: 20 },
   alerta: { borderRadius: 12 },
-  meta: { opacity: 0.7, marginTop: 8, fontSize: 12 },
-  tentar: { marginTop: 8, alignSelf: "flex-start" },
-  acoes: { gap: 8, marginTop: 4 },
+  meta: { opacity: 0.5, marginTop: 8, fontSize: 12 },
+  tentar: { marginTop: 10, alignSelf: "flex-start" },
+  acoes: { gap: 8, marginTop: 8 },
 });
