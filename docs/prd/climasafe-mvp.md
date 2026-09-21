@@ -1,4 +1,4 @@
-# PRD — ClimaSafe MVP (Brasil-first)
+# PRD — PreparaClima MVP (Brasil-first)
 
 > Tipo: PRD inicial · Data: 2026-09-21
 > **Status:** Aguardando implementação
@@ -7,13 +7,13 @@
 
 ## 1. Visão geral
 
-O ClimaSafe é um app mobile (iOS/Android) que ajuda famílias brasileiras a se prepararem para desastres climáticos. Neste recorte, o usuário informa seu perfil de risco uma única vez (tipos de risco, localização, quem mora na casa), vê um painel com o clima atual e os alertas oficiais da sua região, segue um checklist de preparação por fase (antes, durante, depois) e tem contatos de emergência à mão. Tudo em português do Brasil, com funcionamento do essencial mesmo sem internet.
+O PreparaClima é um app mobile (iOS/Android) que ajuda famílias brasileiras a se prepararem para desastres climáticos. Neste recorte, o usuário informa seu perfil de risco uma única vez (tipos de risco, localização, quem mora na casa), vê um painel com o clima atual e os alertas oficiais da sua região, segue um checklist de preparação por fase (antes, durante, depois) e tem contatos de emergência à mão. Tudo em português do Brasil, com funcionamento do essencial mesmo sem internet.
 
 Documento de referência (visão de negócio completa, fora deste recorte): `docs/ClimaSafe_PRD.md`.
 
 ## 2. Problema que resolve
 
-Alertas climáticos chegam fragmentados (INMET, Defesa Civil, redes sociais) e as pessoas recebem o aviso mas não sabem o que fazer. Recomendações genéricas não funcionam: quem mora em área de enchente precisa de ações diferentes de quem enfrenta seca. Apenas uma minoria das famílias tem plano de emergência. O ClimaSafe resolve isso ligando três coisas: o risco específico da pessoa, o alerta atual da região dela e um passo a passo do que fazer.
+Alertas climáticos chegam fragmentados (INMET, Defesa Civil, redes sociais) e as pessoas recebem o aviso mas não sabem o que fazer. Recomendações genéricas não funcionam: quem mora em área de enchente precisa de ações diferentes de quem enfrenta seca. Apenas uma minoria das famílias tem plano de emergência. O PreparaClima resolve isso ligando três coisas: o risco específico da pessoa, o alerta atual da região dela e um passo a passo do que fazer.
 
 ## 3. Público-alvo
 

@@ -7,16 +7,38 @@ import {
 } from "react-redux";
 import profileReducer from "./profileSlice";
 
-const CHAVE_PERFIL = "@climasafe:perfil";
+const CHAVE_PERFIL = "@preparaclima:perfil";
+const CHAVE_PERFIL_LEGADA = "@climasafe:perfil";
 
 export const store = configureStore({
   reducer: { profile: profileReducer },
 });
 
+function perfilValido(valor: unknown): boolean {
+  if (typeof valor !== "object" || valor === null) return false;
+  const perfil = valor as Record<string, unknown>;
+  return (
+    Array.isArray(perfil.riscos) &&
+    typeof perfil.pessoasDomicilio === "number" &&
+    Array.isArray(perfil.mobilidade) &&
+    typeof perfil.onboardingConcluido === "boolean" &&
+    (perfil.localizacao === null || typeof perfil.localizacao === "object")
+  );
+}
+
 export async function carregarPerfilPersistido() {
   try {
-    const bruto = await AsyncStorage.getItem(CHAVE_PERFIL);
-    return bruto ? JSON.parse(bruto) : null;
+    let bruto = await AsyncStorage.getItem(CHAVE_PERFIL);
+    if (!bruto) {
+      bruto = await AsyncStorage.getItem(CHAVE_PERFIL_LEGADA);
+      if (bruto) {
+        await AsyncStorage.setItem(CHAVE_PERFIL, bruto);
+        await AsyncStorage.removeItem(CHAVE_PERFIL_LEGADA);
+      }
+    }
+    if (!bruto) return null;
+    const perfil = JSON.parse(bruto);
+    return perfilValido(perfil) ? perfil : null;
   } catch {
     return null;
   }

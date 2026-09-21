@@ -15,32 +15,41 @@ export default function Localizacao() {
 
   async function usarGps() {
     setErro("");
-    const permissao = await Location.requestForegroundPermissionsAsync();
-    if (permissao.status !== "granted") {
-      setErro("Permissão de localização negada. Informe a cidade manualmente.");
-      return;
+    try {
+      const permissao = await Location.requestForegroundPermissionsAsync();
+      if (permissao.status !== "granted") {
+        setErro(
+          "Permissão de localização negada. Informe a cidade manualmente."
+        );
+        return;
+      }
+      const posicao = await Location.getCurrentPositionAsync({});
+      dispatch(
+        definirLocalizacao({
+          modo: "gps",
+          latitude: posicao.coords.latitude,
+          longitude: posicao.coords.longitude,
+        })
+      );
+      router.push("/onboarding/domicilio");
+    } catch {
+      setErro(
+        "Não foi possível obter sua localização. Tente de novo ou informe a cidade manualmente."
+      );
     }
-    const posicao = await Location.getCurrentPositionAsync({});
-    dispatch(
-      definirLocalizacao({
-        modo: "gps",
-        latitude: posicao.coords.latitude,
-        longitude: posicao.coords.longitude,
-      })
-    );
-    router.push("/onboarding/domicilio");
   }
 
   function usarManual() {
-    if (!cidade.trim() || !estado.trim()) {
-      setErro("Informe cidade e estado.");
+    const uf = estado.trim().toUpperCase();
+    if (!cidade.trim() || uf.length !== 2) {
+      setErro("Informe a cidade e a UF com 2 letras (ex.: São Carlos/SP).");
       return;
     }
     dispatch(
       definirLocalizacao({
         modo: "manual",
         cidade: cidade.trim(),
-        estado: estado.trim(),
+        estado: uf,
       })
     );
     router.push("/onboarding/domicilio");

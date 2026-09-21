@@ -10,7 +10,7 @@ import { Provider } from "react-redux";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { carregarPerfilPersistido, store } from "@/store";
+import { carregarPerfilPersistido, store, useAppSelector } from "@/store";
 import { hidratarPerfil } from "@/store/profileSlice";
 
 export const unstable_settings = {
@@ -20,15 +20,15 @@ export const unstable_settings = {
 function GuardRotas({ children }: { children: React.ReactNode }) {
   const segmentos = useSegments();
   const router = useRouter();
+  const concluido = useAppSelector((s) => s.profile.onboardingConcluido);
   const [pronto, setPronto] = useState(false);
 
   useEffect(() => {
     const emOnboarding = segmentos[0] === "onboarding";
-    const concluido = store.getState().profile.onboardingConcluido;
     if (!concluido && !emOnboarding) router.replace("/onboarding/quiz");
     if (concluido && emOnboarding) router.replace("/(tabs)");
     setPronto(true);
-  }, [segmentos, router]);
+  }, [segmentos, router, concluido]);
 
   if (!pronto) return null;
   return <>{children}</>;
@@ -56,10 +56,6 @@ export default function RootLayout() {
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="modal"
-              options={{ presentation: "modal", title: "Modal" }}
-            />
           </Stack>
         </GuardRotas>
         <StatusBar style="auto" />

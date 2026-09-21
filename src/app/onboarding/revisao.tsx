@@ -18,9 +18,12 @@ export default function Revisao() {
   ).map((o) => o.rotulo);
 
   function finalizar() {
+    if (perfil.riscos.length === 0 || !perfil.localizacao) return;
     dispatch(concluirOnboarding());
     router.replace("/(tabs)");
   }
+
+  const pronto = perfil.riscos.length > 0 && perfil.localizacao !== null;
 
   return (
     <ScrollView contentContainerStyle={estilos.container}>
@@ -54,9 +57,14 @@ export default function Revisao() {
           </Text>
         </Card.Content>
       </Card>
-      <Button mode="contained" onPress={finalizar}>
-        Começar a usar o ClimaSafe
+      <Button mode="contained" disabled={!pronto} onPress={finalizar}>
+        Começar a usar o PreparaClima
       </Button>
+      {!pronto && (
+        <Text variant="bodySmall">
+          Volte e complete os riscos e a localização para continuar.
+        </Text>
+      )}
     </ScrollView>
   );
 }

@@ -59,11 +59,11 @@ export default function Dashboard() {
       </Card>
 
       <View style={estilos.acoes}>
-        <Button mode="contained" onPress={() => router.push("/modal")}>
+        <Button mode="contained" onPress={() => router.push("/plano")}>
           Ativar Plano de Emergência
         </Button>
         <Text style={estilos.mock}>
-          Checklist interativo (PRD 1.3) ainda não implementado.
+          Checklist interativo em construção (Fase 3 do PRD).
         </Text>
       </View>
     </ScrollView>

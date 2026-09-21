@@ -1,50 +1,70 @@
-# Welcome to your Expo app 👋
+# PreparaClima — Alerta Climático + Preparação (Brasil-first MVP)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App mobile (iOS/Android) em Expo que personaliza alertas climáticos pelo
+perfil de risco do usuário. Onboarding (quiz, localização, domicílio) e
+dashboard de alertas. Especificação: [docs/ClimaSafe_PRD.md](docs/ClimaSafe_PRD.md) ·
+Visão: [docs/project-overview.md](docs/project-overview.md) ·
+Arquitetura: [docs/architecture.md](docs/architecture.md).
 
-## Get started
+> Status: MVP parcial. Dashboard usa dados de demonstração; integrações
+> OpenWeather/INMET, checklist, mapa, feed, notificações e contatos ainda
+> não implementados.
 
-1. Install dependencies
+## Pré-requisitos
 
-   ```bash
-   npm install
-   ```
+- Node 20.19+ e npm
+- App Expo Go (só para telas sem código nativo) ou development build
+  (`react-native-paper` e `expo-notifications` exigem dev build)
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Como rodar
 
 ```bash
-npm run reset-project
+npm install
+npx expo start --clear
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Pressione `a` (Android), `i` (iOS) ou `w` (web).
 
-## Learn more
+### Servidor (esqueleto Fastify)
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+cd server
+npm install
+npm run dev   # GET /saude e GET /alertas em :3333
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Verificações
 
-## Join the community
+```bash
+npm run lint        # expo lint
+npm run typecheck   # tsc --noEmit
+npx expo-doctor     # 18/18 em 2026-09-21
+```
 
-Join our community of developers creating universal apps.
+Pre-commit (Husky): Prettier nos arquivos staged + `typecheck`.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Estrutura
+
+```
+src/app/            # Rotas Expo Router: (tabs)/, onboarding/
+src/components/     # UI (themed-*, ui/*)
+src/constants/      # theme.ts (Colors, CoresAlerta verde→vermelho)
+src/hooks/          # use-color-scheme, use-theme-color
+src/store/          # Redux profile (riscos, localização, domicílio)
+src/types/          # PerfilRisco e opções PT-BR
+src/assets/images/  # ícone, splash, favicon
+server/             # API Fastify (esqueleto)
+docs/               # project-overview, architecture, ClimaSafe_PRD
+```
+
+Fluxo: primeiro acesso cai em `/onboarding/quiz`; ao concluir, o perfil
+persiste em AsyncStorage e o app abre o dashboard em `/(tabs)`.
+
+## Comandos úteis
+
+```bash
+npx expo install <pkg>   # sempre usar para deps Expo (versões compatíveis)
+npx expo install --fix   # corrige versões incompatíveis
+```
+
+Regras do projeto: [AGENTS.md](AGENTS.md).
