@@ -9,3 +9,9 @@ export function formatarDataHora(iso: string | null): string {
     minute: "2-digit",
   });
 }
+
+export function formatarHora(iso: string): string {
+  const data = new Date(iso);
+  if (Number.isNaN(data.getTime())) return "—";
+  return data.toLocaleString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}

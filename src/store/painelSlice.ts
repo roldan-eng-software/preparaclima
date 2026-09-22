@@ -3,9 +3,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { obterAlertasVigentes } from "@/services/alertas";
 import { avaliarENotificar } from "@/services/avisos";
-import { obterClimaAtual } from "@/services/clima";
+import { obterClimaAtual, obterPrevisao } from "@/services/clima";
 import type { AlertaOficial } from "@/types/alerta";
-import type { LeituraClima } from "@/types/clima";
+import type { LeituraClima, PrevisaoHora } from "@/types/clima";
 import type { RootState } from "./index";
 
 const CHAVE_PAINEIL = "@preparaclima:painel";
@@ -19,6 +19,8 @@ export type EstadoPainel =
 interface PainelState {
   clima: EstadoPainel;
   leitura: LeituraClima | null;
+  previsao: PrevisaoHora[];
+  previsaoDemonstracao: boolean;
   alertas: AlertaOficial[];
   alertasErro: string | null;
   fonteIndisponivel: boolean;
@@ -28,6 +30,8 @@ interface PainelState {
 const initialState: PainelState = {
   clima: { estado: "carregando" },
   leitura: null,
+  previsao: [],
+  previsaoDemonstracao: false,
   alertas: [],
   alertasErro: null,
   fonteIndisponivel: false,
@@ -38,16 +42,19 @@ export const atualizarPainel = createAsyncThunk(
   "painel/atualizar",
   async (_, { getState, rejectWithValue }) => {
     const { profile } = getState() as RootState;
-    const [clima, alertas] = await Promise.all([
+    const [clima, alertas, previsao] = await Promise.all([
       obterClimaAtual(profile.localizacao),
       obterAlertasVigentes(profile.localizacao),
+      obterPrevisao(profile.localizacao),
     ]);
-    if (!clima.ok && !alertas.ok) {
-      return rejectWithValue({ clima, alertas });
+    if (!clima.ok && !alertas.ok && !previsao.ok) {
+      return rejectWithValue({ clima, alertas, previsao });
     }
     const pacote = {
       leitura: clima.ok ? clima.leitura : null,
       demonstracao: clima.ok ? clima.demonstracao : false,
+      previsao: previsao.ok ? previsao.previsao : [],
+      previsaoDemonstracao: previsao.ok ? previsao.demonstracao : false,
       alertas: alertas.ok ? alertas.alertas : [],
       salvaEm: new Date().toISOString(),
     };
@@ -55,7 +62,7 @@ export const atualizarPainel = createAsyncThunk(
     if (alertas.ok && alertas.alertas.length > 0) {
       avaliarENotificar(alertas.alertas).catch(() => {});
     }
-    return { clima, alertas, pacote };
+    return { clima, alertas, previsao, pacote };
   }
 );
 
@@ -68,6 +75,8 @@ export async function carregarPainelCache() {
     return pacote as {
       leitura: LeituraClima | null;
       demonstracao: boolean;
+      previsao: PrevisaoHora[];
+      previsaoDemonstracao: boolean;
       alertas: AlertaOficial[];
       salvaEm: string;
     };
@@ -86,6 +95,8 @@ const painelSlice = createSlice({
         payload: {
           leitura: LeituraClima | null;
           demonstracao: boolean;
+          previsao: PrevisaoHora[];
+          previsaoDemonstracao: boolean;
           alertas: AlertaOficial[];
         };
         type: string;
@@ -99,6 +110,8 @@ const painelSlice = createSlice({
           demonstracao: pacote.demonstracao,
         };
       }
+      state.previsao = pacote.previsao ?? [];
+      state.previsaoDemonstracao = pacote.previsaoDemonstracao ?? false;
       state.alertas = pacote.alertas;
     },
   },
@@ -109,7 +122,7 @@ const painelSlice = createSlice({
       })
       .addCase(atualizarPainel.fulfilled, (state, action) => {
         state.atualizando = false;
-        const { clima, alertas } = action.payload;
+        const { clima, alertas, previsao } = action.payload;
         if (clima.ok) {
           state.leitura = clima.leitura;
           state.clima = {
@@ -133,6 +146,10 @@ const painelSlice = createSlice({
         }
         if (!clima.ok && state.leitura === null) {
           state.clima = { estado: "vazio" };
+        }
+        if (previsao.ok) {
+          state.previsao = previsao.previsao;
+          state.previsaoDemonstracao = previsao.demonstracao;
         }
       })
       .addCase(atualizarPainel.rejected, (state, action) => {

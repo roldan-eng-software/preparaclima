@@ -13,7 +13,7 @@ import {
 } from "@/store/painelSlice";
 import { nivelMaisGrave } from "@/types/alerta";
 import { RISCOS_OPCOES } from "@/types/profile";
-import { formatarDataHora } from "@/utils/format";
+import { formatarDataHora, formatarHora } from "@/utils/format";
 
 export default function Dashboard() {
   const dispatch = useAppDispatch();
@@ -165,6 +165,34 @@ export default function Dashboard() {
               )}
             </>
           ) : null}
+        </Card.Content>
+      </Card>
+
+      <Card>
+        <Card.Title title="Próximas horas" />
+        <Card.Content style={{ gap: 8 }}>
+          {painel.previsao.length === 0 ? (
+            <Text variant="bodyMedium">
+              {painel.atualizando
+                ? "Buscando a previsão…"
+                : "Previsão indisponível no momento."}
+            </Text>
+          ) : (
+            painel.previsao.map((hora) => (
+              <View key={hora.dataHora}>
+                <Text variant="titleSmall">
+                  {formatarHora(hora.dataHora)} • {hora.temperaturaC}°C •{" "}
+                  {hora.descricao}
+                </Text>
+                <Text variant="bodySmall">
+                  🌧️ {hora.probChuva}% • 💨 {hora.ventoKmh} km/h
+                </Text>
+              </View>
+            ))
+          )}
+          {painel.previsaoDemonstracao && painel.previsao.length > 0 && (
+            <Text style={estilos.meta}>demonstração (sem chave)</Text>
+          )}
         </Card.Content>
       </Card>
 
