@@ -116,14 +116,22 @@ export default function Dashboard() {
         <Card.Title
           title="Agora"
           right={(props) => (
-            <IconButton
-              {...props}
-              icon="refresh"
-              accessibilityLabel="Atualizar clima e alertas"
-              loading={painel.atualizando}
-              disabled={painel.atualizando}
-              onPress={carregar}
-            />
+            <View style={estilos.botoesCard}>
+              <IconButton
+                {...props}
+                icon="map-marker"
+                accessibilityLabel="Editar localização"
+                onPress={() => router.push("/localizacao")}
+              />
+              <IconButton
+                {...props}
+                icon="refresh"
+                accessibilityLabel="Atualizar clima e alertas"
+                loading={painel.atualizando}
+                disabled={painel.atualizando}
+                onPress={carregar}
+              />
+            </View>
           )}
         />
         <Card.Content>
@@ -196,4 +204,5 @@ const estilos = StyleSheet.create({
   meta: { opacity: 0.5, marginTop: 8, fontSize: 12 },
   tentar: { marginTop: 10, alignSelf: "flex-start" },
   acoes: { gap: 8, marginTop: 8 },
+  botoesCard: { flexDirection: "row", alignItems: "center" },
 });

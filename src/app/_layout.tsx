@@ -115,6 +115,10 @@ function AppInterno({
               name="privacidade"
               options={{ title: "Privacidade" }}
             />
+            <Stack.Screen
+              name="localizacao"
+              options={{ title: "Editar localização" }}
+            />
           </Stack>
         </GuardRotas>
         <StatusBar style="auto" />
