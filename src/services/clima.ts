@@ -15,6 +15,8 @@ function leituraDemonstracao(origem: string): ResultadoClima {
       ventoKmh: 18,
       observadaEm: new Date().toISOString(),
       origem,
+      condicaoId: 501,
+      descricao: "chuva leve",
     },
   };
 }
@@ -58,6 +60,9 @@ export async function obterClimaAtual(
       };
     }
     const dados = await resposta.json();
+    const tempoAtual = (
+      Array.isArray(dados.weather) ? dados.weather[0] : {}
+    ) as Record<string, unknown>;
     return {
       ok: true,
       demonstracao: false,
@@ -69,6 +74,8 @@ export async function obterClimaAtual(
           (dados.dt ?? Date.now() / 1000) * 1000
         ).toISOString(),
         origem,
+        condicaoId: typeof tempoAtual.id === "number" ? tempoAtual.id : null,
+        descricao: String(tempoAtual.description ?? ""),
       },
     };
   } catch {

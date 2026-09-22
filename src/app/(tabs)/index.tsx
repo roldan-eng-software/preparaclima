@@ -1,5 +1,5 @@
-import { router } from "expo-router";
-import { useCallback, useEffect } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useRef } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, IconButton, Text } from "react-native-paper";
 
@@ -24,12 +24,28 @@ export default function Dashboard() {
     dispatch(atualizarPainel());
   }, [dispatch]);
 
+  const chaveLocalizacao = JSON.stringify(perfil.localizacao);
+  const ultimaLocalizacao = useRef<string | null>(null);
+
   useEffect(() => {
     carregarPainelCache().then((pacote) => {
       if (pacote) dispatch(cacheAplicado(pacote));
     });
+    ultimaLocalizacao.current = chaveLocalizacao;
     carregar();
-  }, [carregar, dispatch]);
+  }, [carregar, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        ultimaLocalizacao.current !== null &&
+        ultimaLocalizacao.current !== chaveLocalizacao
+      ) {
+        ultimaLocalizacao.current = chaveLocalizacao;
+        carregar();
+      }
+    }, [chaveLocalizacao, carregar])
+  );
 
   const rotulosRiscos = RISCOS_OPCOES.filter((o) =>
     perfil.riscos.includes(o.valor)
@@ -74,8 +90,11 @@ export default function Dashboard() {
                 Recomendação: {principal.recomendacao}
               </Text>
               <Text style={{ color: cores.texto }}>
-                Válido até {formatarDataHora(principal.validade)} •{" "}
+                {principal.validade
+                  ? `Válido até ${formatarDataHora(principal.validade)} • `
+                  : ""}
                 {principal.orgao}
+                {principal.provisorio ? " • estimativa automática" : ""}
               </Text>
             </>
           ) : painel.alertasErro ? (
@@ -86,7 +105,9 @@ export default function Dashboard() {
             </Text>
           ) : (
             <Text style={{ color: cores.texto }}>
-              Nenhum alerta vigente para sua região. Tudo tranquilo por aqui.
+              Sem alerta oficial vigente para sua região no momento. Cobertura
+              oficial limitada — o app estima a severidade pelo clima atual
+              quando há condição severa.
             </Text>
           )}
         </Card.Content>
@@ -104,7 +125,11 @@ export default function Dashboard() {
                     {CoresAlerta[a.nivel].rotulo} — {a.titulo}
                   </Text>
                   <Text variant="bodySmall">
-                    Válido até {formatarDataHora(a.validade)} • {a.orgao}
+                    {a.validade
+                      ? `Válido até ${formatarDataHora(a.validade)} • `
+                      : ""}
+                    {a.orgao}
+                    {a.provisorio ? " • estimativa" : ""}
                   </Text>
                 </View>
               ))}

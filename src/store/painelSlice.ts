@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { obterAlertasVigentes } from "@/services/alertas";
 import { avaliarENotificar } from "@/services/avisos";
 import { obterClimaAtual, obterPrevisao } from "@/services/clima";
+import { alertaProvisorioPorCondicao } from "@/services/provedores";
 import type { AlertaOficial } from "@/types/alerta";
 import type { LeituraClima, PrevisaoHora } from "@/types/clima";
 import type { RootState } from "./index";
@@ -50,17 +51,22 @@ export const atualizarPainel = createAsyncThunk(
     if (!clima.ok && !alertas.ok && !previsao.ok) {
       return rejectWithValue({ clima, alertas, previsao });
     }
+    let alertasFinais = alertas.ok ? alertas.alertas : [];
+    if (alertas.ok && alertasFinais.length === 0 && clima.ok) {
+      const provisorio = alertaProvisorioPorCondicao(clima.leitura);
+      if (provisorio) alertasFinais = [provisorio];
+    }
     const pacote = {
       leitura: clima.ok ? clima.leitura : null,
       demonstracao: clima.ok ? clima.demonstracao : false,
       previsao: previsao.ok ? previsao.previsao : [],
       previsaoDemonstracao: previsao.ok ? previsao.demonstracao : false,
-      alertas: alertas.ok ? alertas.alertas : [],
+      alertas: alertasFinais,
       salvaEm: new Date().toISOString(),
     };
     await AsyncStorage.setItem(CHAVE_PAINEIL, JSON.stringify(pacote));
-    if (alertas.ok && alertas.alertas.length > 0) {
-      avaliarENotificar(alertas.alertas).catch(() => {});
+    if (alertasFinais.length > 0) {
+      avaliarENotificar(alertasFinais).catch(() => {});
     }
     return { clima, alertas, previsao, pacote };
   }
@@ -122,7 +128,7 @@ const painelSlice = createSlice({
       })
       .addCase(atualizarPainel.fulfilled, (state, action) => {
         state.atualizando = false;
-        const { clima, alertas, previsao } = action.payload;
+        const { clima, alertas, previsao, pacote } = action.payload;
         if (clima.ok) {
           state.leitura = clima.leitura;
           state.clima = {
@@ -137,7 +143,7 @@ const painelSlice = createSlice({
           };
         }
         if (alertas.ok) {
-          state.alertas = alertas.alertas;
+          state.alertas = pacote.alertas;
           state.alertasErro = null;
           state.fonteIndisponivel = false;
         } else {

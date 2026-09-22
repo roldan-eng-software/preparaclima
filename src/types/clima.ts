@@ -4,6 +4,8 @@ export interface LeituraClima {
   ventoKmh: number;
   observadaEm: string;
   origem: string;
+  condicaoId?: number | null;
+  descricao?: string;
 }
 
 export type ErroClima =

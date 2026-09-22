@@ -11,6 +11,7 @@ export interface AlertaOficial {
   validade: string | null;
   orgao: string;
   fonte: FonteAlerta;
+  provisorio?: boolean;
 }
 
 export type ErroAlertas = "sem-chave" | "sem-rede" | "servico-indisponivel";
