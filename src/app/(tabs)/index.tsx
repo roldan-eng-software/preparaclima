@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useCallback, useEffect } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
-import { Button, Card, Text } from "react-native-paper";
+import { Button, Card, IconButton, Text } from "react-native-paper";
 
 import { CoresAlerta } from "@/constants/theme";
 import { AvisoOffline } from "@/components/aviso-offline";
@@ -113,7 +113,19 @@ export default function Dashboard() {
       )}
 
       <Card>
-        <Card.Title title="Agora" />
+        <Card.Title
+          title="Agora"
+          right={(props) => (
+            <IconButton
+              {...props}
+              icon="refresh"
+              accessibilityLabel="Atualizar clima e alertas"
+              loading={painel.atualizando}
+              disabled={painel.atualizando}
+              onPress={carregar}
+            />
+          )}
+        />
         <Card.Content>
           {painel.clima.estado === "carregando" && painel.leitura === null ? (
             <Text>Buscando o clima da sua região…</Text>
