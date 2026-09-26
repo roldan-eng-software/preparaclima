@@ -1,0 +1,141 @@
+// Prisma schema — HomeEye Gestão de Câmeras (001-camera-management)
+// Data model: specs/001-camera-management/data-model.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum HouseholdRole {
+  OWNER
+  VIEWER
+}
+
+enum InviteStatus {
+  pending
+  accepted
+  expired
+  revoked
+}
+
+model Household {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(60)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cameras     Camera[]
+  rooms       Room[]
+  memberships Membership[]
+  invites     Invite[]
+  pairingCodes PairingCode[]
+  auditEvents AuditEvent[]
+}
+
+model Room {
+  id          String    @id @default(uuid()) @db.Uuid
+  householdId String    @db.Uuid
+  name        String    @db.VarChar(60)
+  createdAt   DateTime  @default(now())
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  cameras   Camera[]
+
+  @@unique([householdId, name])
+  @@index([householdId])
+}
+
+model Camera {
+  id              String    @id @default(uuid()) @db.Uuid
+  householdId     String    @db.Uuid
+  roomId          String?   @db.Uuid
+  deviceId        String    @unique @db.VarChar(128)
+  deviceTokenHash String
+  name            String    @db.VarChar(60)
+  lastSeenAt      DateTime  @default(now())
+  claimedAt       DateTime  @default(now())
+  removedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  household Household     @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  room      Room?         @relation(fields: [roomId], references: [id], onDelete: SetNull)
+  grants    CameraGrant[]
+
+  @@index([householdId])
+  @@index([roomId])
+}
+
+model PairingCode {
+  id          String    @id @default(uuid()) @db.Uuid
+  householdId String    @db.Uuid
+  deviceId    String    @db.VarChar(128)
+  codeHash    String    @unique
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+
+  @@index([householdId])
+}
+
+model Membership {
+  id          String        @id @default(uuid()) @db.Uuid
+  householdId String        @db.Uuid
+  userId      String
+  role        HouseholdRole @default(VIEWER)
+  createdAt   DateTime      @default(now())
+
+  household Household     @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  grants    CameraGrant[]
+
+  @@unique([householdId, userId])
+  @@index([householdId])
+}
+
+model CameraGrant {
+  id           String   @id @default(uuid()) @db.Uuid
+  membershipId String   @db.Uuid
+  cameraId     String   @db.Uuid
+  createdAt    DateTime @default(now())
+
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  camera     Camera     @relation(fields: [cameraId], references: [id], onDelete: Cascade)
+
+  @@unique([membershipId, cameraId])
+  @@index([cameraId])
+}
+
+model Invite {
+  id          String       @id @default(uuid()) @db.Uuid
+  householdId String       @db.Uuid
+  tokenHash   String       @unique
+  cameraIds   String[]     @db.Uuid
+  status      InviteStatus @default(pending)
+  expiresAt   DateTime
+  acceptedBy  String?
+  createdBy   String
+  createdAt   DateTime     @default(now())
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+
+  @@index([householdId])
+}
+
+model AuditEvent {
+  id          String   @id @default(uuid()) @db.Uuid
+  householdId String   @db.Uuid
+  actorId     String
+  action      String
+  targetId    String?
+  createdAt   DateTime @default(now())
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+
+  @@index([householdId])
+}

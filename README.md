@@ -71,4 +71,4 @@ npx expo install <pkg>   # sempre usar para deps Expo (versões compatíveis)
 npx expo install --fix   # corrige versões incompatíveis
 ```
 
-Regras do projeto: [AGENTS.md](AGENTS.md).
+Regras do projeto: [CLAUDE.md](CLAUDE.md).

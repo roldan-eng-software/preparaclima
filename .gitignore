@@ -1,44 +1,92 @@
+# Política: só entra em commit/push o que é seguro e aprovado para o GitHub.
+# Segredos, chaves e arquivos locais/gerados NUNCA são versionados — ver blocos abaixo.
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
 node_modules/
+.pnp
+.pnp.*
+
+# env — NUNCA commitar valores reais (ex.: EXPO_PUBLIC_OPENWEATHER_API_KEY).
+# Apenas modelos *.example são versionados (ex.: .env.example).
+.env*
+!*.example
+
+# secrets e credenciais — nunca commitar
+secrets/
+credentials/
+credential*.json
+*service-account*.json
+google-services.json
+GoogleService-Info.plist
+*.pem
+*.key
+*.p8
+*.p12
+*.jks
+*.keystore
+*.mobileprovision
+*.provisionprofile
 
 # Expo
 .expo/
+.expo-shared/
 dist/
+build/
 web-build/
 expo-env.d.ts
 
-# Native
+# Native gerado (Continuous Native Generation) — nunca editar nem commitar
+/ios
+/android
 .kotlin/
 *.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+*.rej
+
+# EAS local
+.easignore
 
 # Metro
 .metro-health-check*
 
-# debug
+# logs, debug e cobertura
+*.log
+logs/
 npm-debug.*
 yarn-debug.*
 yarn-error.*
-
-# macOS
-.DS_Store
-*.pem
-
-# local env files
-.env
-.env*.local
+pnpm-debug.*
+coverage/
+.nyc_output/
 
 # typescript
 *.tsbuildinfo
 
 app-example
 
-# generated native folders
-/ios
-/android
+# tooling local — cópias geradas do repo, nunca commitar
+.kilo/worktrees/
+*.worktree
+
+# Claude Code — versiona skills/regras/settings base; nunca prefs pessoais e histórico
+.claude/settings.local.json
+.claude/history/
+.claude/todos/
+.claude/projects/
+
+# editores (versiona só o compartilhado de .vscode)
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# macOS / Windows / Linux
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*~
